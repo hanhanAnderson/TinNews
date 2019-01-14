@@ -32,5 +32,4 @@ public class TinBasicFragment extends Fragment  {
     public String getFragmentTag() {
         return this.getClass().getName() + uuid;
     }
-
 }

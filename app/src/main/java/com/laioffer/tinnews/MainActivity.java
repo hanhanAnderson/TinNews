@@ -1,14 +1,20 @@
 package com.laioffer.tinnews;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.laioffer.tinnews.common.ContainerFragment;
 import com.laioffer.tinnews.common.TinBasicActivity;
+import com.laioffer.tinnews.common.TinBasicFragment;
 
 public class MainActivity extends TinBasicActivity {
     private ViewPager viewPager;
@@ -22,6 +28,17 @@ public class MainActivity extends TinBasicActivity {
         adapter = new TinFragmentPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(TinFragmentPagerAdapter.FRAGMENT_NUMBER);
+
+
+        bottomBar = findViewById(R.id.bottom_navigation);
+        bottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                viewPager.setCurrentItem(ContainerFragment.getPositionById(item.getItemId()));
+                return true;
+            }
+        });
+
 
 //        setContentView(R.layout.activity_main);
 //        android1 10-1
@@ -40,6 +57,19 @@ public class MainActivity extends TinBasicActivity {
     @Override
     protected int getLayout() {
         return R.layout.activity_main;
+    }
+
+    private FragmentManager getCurrentChildFragmentManager() {
+        return adapter.getItem(viewPager.getCurrentItem()).getChildFragmentManager();
+    }
+
+    @Override
+    public void doFragmentTransaction(TinBasicFragment basicFragment) {
+        FragmentTransaction fragmentTransaction = getCurrentChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(
+                R.id.child_fragment_container,
+                basicFragment,
+                basicFragment.getFragmentTag()).addToBackStack(null).commit();
     }
 
     @Override
