@@ -76,6 +76,15 @@ public class MainActivity extends TinBasicActivity {
     public void showSnackBar(String message) {
 
     }
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getCurrentChildFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
 
 
